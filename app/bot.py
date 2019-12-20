@@ -3,7 +3,8 @@ import time
 from config import Site
 
 site = Site()
-sub = site.subreddit('all')
+sub = site.subreddit('qicksilvershangout')
+self_name = site.user.me().name
 
 subjects = [
     "it's",
@@ -52,7 +53,7 @@ while True:
         # get all comments from each submission
         submission.comments.replace_more()
         for comment in submission.comments.list():
-            if comment.author is None or comment.author.name == 'no_ur_great':
+            if comment.author is None or comment.author.name == self_name:
                 # Don't compliment self, would get caught in a loop
                 # Skip comments without an author
                 continue
@@ -79,12 +80,12 @@ while True:
 
             if is_compliment:
                 # check each matching comment for a response from self
-                if 'no_ur_great' not in \
+                if self_name not in \
                         [reply.author.name for reply in list(comment.replies) if reply.author is not None]:
                     should_reply = True
                 # if no response, respond
                 if should_reply:
-                    if comment.parent().author.name == 'no_ur_great':
+                    if comment.parent().author.name == self_name:
                         # We're being complimented!
                         comment.reply(f"Awww, thanks u/{comment.author.name}. =)")
                     elif compliment_used == 'great':
