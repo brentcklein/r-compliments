@@ -3,7 +3,7 @@ import time
 from config import Site
 
 site = Site()
-sub = site.subreddit('qicksilvershangout')
+sub = site.subreddit('qicksilvershangout+gonewild')
 
 subjects = [
     "it's",
@@ -45,6 +45,10 @@ compliments = [
 while True:
     # get most recent submissions
     for submission in sub.new(limit=None):
+        # Avoid the rough side of town
+        if submission.subreddit.over18:
+            continue
+
         # get all comments from each submission
         for comment in submission.comments.list():
             if comment.author.name == 'no_ur_great':
