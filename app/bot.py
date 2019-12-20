@@ -3,7 +3,7 @@ import time
 from config import Site
 
 site = Site()
-sub = site.subreddit('qicksilvershangout+gonewild')
+sub = site.subreddit('all')
 
 subjects = [
     "it's",
@@ -25,7 +25,8 @@ adverbs = [
     "super",
     "very",
     "incredibly",
-    "pretty"
+    "pretty",
+    "really"
 ]
 
 compliments = [
@@ -38,7 +39,6 @@ compliments = [
     "beautiful",
     "interesting",
     "great",
-    "incredible",
     "an inspiration"
 ]
 
@@ -50,9 +50,11 @@ while True:
             continue
 
         # get all comments from each submission
+        submission.comments.replace_more()
         for comment in submission.comments.list():
-            if comment.author.name == 'no_ur_great':
+            if comment.author is None or comment.author.name == 'no_ur_great':
                 # Don't compliment self, would get caught in a loop
+                # Skip comments without an author
                 continue
 
             is_compliment = False
@@ -77,19 +79,19 @@ while True:
 
             if is_compliment:
                 # check each matching comment for a response from self
-                if 'no_ur_great' not in [reply.author.name for reply in list(comment.replies)]:
+                if 'no_ur_great' not in \
+                        [reply.author.name for reply in list(comment.replies) if reply.author is not None]:
                     should_reply = True
                 # if no response, respond
                 if should_reply:
                     if comment.parent().author.name == 'no_ur_great':
                         # We're being complimented!
-                        comment.reply(f"Awww, thanks u/{comment.author.name}. =)\n\nu/therealqicksilver hopes you're "
-                                      f"having a great day!")
+                        comment.reply(f"Awww, thanks u/{comment.author.name}. =)")
                     elif compliment_used == 'great':
                         # r/beetlejuicing incoming
                         comment.reply(f"Check my username, u/{comment.author.name}. =)")
                     else:
                         comment.reply(f"*You're* {compliment_used}, u/{comment.author.name}!")
 
-    # run every thirty minutes
-    time.sleep(30)
+    # run every fifteen minutes
+    time.sleep(900)
