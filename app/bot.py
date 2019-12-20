@@ -49,11 +49,7 @@ while True:
         for comment in submission.comments.list():
             if comment.author.name == 'no_ur_great':
                 # Don't compliment self, would get caught in a loop
-                # continue
-
-                # TODO: remove, only for testing
-                if 'test' not in comment.body:
-                    continue
+                continue
 
             is_compliment = False
             should_reply = False
