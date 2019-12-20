@@ -29,7 +29,7 @@ compliments = [
     "perfect",
     "beautiful",
     "interesting",
-    "great",  # TODO: if compliment is "great," tell commenter to check username
+    "great",
     "incredible",
     "an inspiration"
 ]
@@ -41,7 +41,11 @@ while True:
         for comment in submission.comments.list():
             if comment.author.name == 'no_ur_great':
                 # Don't compliment self, would get caught in a loop
-                continue
+                # continue
+
+                # TODO: remove, only for testing
+                if 'test' not in comment.body:
+                    continue
 
             is_compliment = False
             should_reply = False
@@ -60,7 +64,15 @@ while True:
                     should_reply = True
                 # if no response, respond
                 if should_reply:
-                    comment.reply(f"*You're* {compliment_used}, u/{comment.author.name}!")
+                    if comment.parent().author.name == 'no_ur_great':
+                        # We're being complimented!
+                        comment.reply(f"Awww, thanks u/{comment.author.name}. =)\n\nu/therealqicksilver hopes you're "
+                                      f"having a great day!")
+                    elif compliment_used == 'great':
+                        # r/beetlejuicing incoming
+                        comment.reply(f"Check my username, u/{comment.author.name}. =)")
+                    else:
+                        comment.reply(f"*You're* {compliment_used}, u/{comment.author.name}!")
 
     # run every thirty minutes
     time.sleep(30)
