@@ -20,6 +20,14 @@ subjects = [
     "he is"
 ]
 
+adverbs = [
+    "so",
+    "super",
+    "very",
+    "incredibly",
+    "pretty"
+]
+
 compliments = [
     "cool",
     "neat",
@@ -57,6 +65,15 @@ while True:
                     if f"{subject} {compliment}" in comment.body.lower():
                         is_compliment = True
                         compliment_used = compliment
+                        break
+
+                if compliment_used is None:  # Don't bother checking adverbs if we already have a compliment
+                    for adverb in adverbs:
+                        for compliment in compliments:
+                            if f"{subject} {adverb} {compliment}" in comment.body.lower():
+                                is_compliment = True
+                                compliment_used = f"{adverb} {compliment}"
+                                break
 
             if is_compliment:
                 # check each matching comment for a response from self
