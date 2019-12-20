@@ -1,4 +1,5 @@
 import os
+from praw import Reddit as Site
 
 username = os.environ['praw_username']
 password = os.environ['praw_password']
