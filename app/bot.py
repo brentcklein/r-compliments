@@ -62,6 +62,7 @@ def thread_is_suitable(c):
         'serious' not in c.submission.title.lower() and \
         c.author is not None and \
         c.author.name != self_name
+    # TODO: implement check for number of replies in thread so as not to saturate conversation
 
 
 # get a stream of new comments
@@ -119,3 +120,5 @@ for comment in sub.stream.comments(skip_existing=True):
                 print(f'Encountered API exception: {str(e)}')
                 if "RATELIMIT" not in str(e):
                     raise e
+
+print("Stream exhausted")
