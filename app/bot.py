@@ -5,6 +5,7 @@ from config import Site
 site = Site()
 sub = site.subreddit('qicksilvershangout')
 self_name = site.user.me().name
+print(f"logged in as {self_name}")
 
 subjects = [
     "it's",
@@ -43,9 +44,11 @@ compliments = [
     "an inspiration"
 ]
 
+print("monitoring subreddits...")
 while True:
     # get most recent submissions
     for submission in sub.new(limit=None):
+        print("processing new submission")
         # Avoid the rough side of town
         if submission.subreddit.over18:
             continue
@@ -85,6 +88,7 @@ while True:
                     should_reply = True
                 # if no response, respond
                 if should_reply:
+                    print(f"posting reply in {submission.subreddit.name}")
                     if comment.parent().author.name == self_name:
                         # We're being complimented!
                         comment.reply(f"Awww, thanks u/{comment.author.name}. =)")
@@ -95,4 +99,5 @@ while True:
                         comment.reply(f"*You're* {compliment_used}, u/{comment.author.name}!")
 
     # run every thirty seconds TODO: increase the wait time in prod
+    print("sleeping...")
     time.sleep(30)
