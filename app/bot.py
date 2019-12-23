@@ -74,7 +74,9 @@ replies_made = 0
 for comment in sub.stream.comments(skip_existing=True):
     comments_checked += 1
     if compliments_found > 0 and compliments_found % 10 == 0 or comments_checked % 100 == 0:
-        print(f"comments checked: {comments_checked}; compliments found: {compliments_found}")
+        print(f"comments checked: {comments_checked}; "
+              f"compliments found: {compliments_found}; "
+              f"replies made {replies_made}")
 
     # Check for thread suitability
     if not thread_is_suitable(comment):
