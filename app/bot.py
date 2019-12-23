@@ -1,6 +1,7 @@
 import time
 
 from config import Site
+from praw.exceptions import APIException
 
 site = Site()
 sub = site.subreddit('all')
@@ -44,15 +45,23 @@ compliments = [
     "an inspiration"
 ]
 
+
+def reply_to_comment(c, m):
+    c.reply(m)
+
+
 print("monitoring new comments...")
 while True:
     # get a stream of new comments
     comments_checked = 0
     compliments_found = 0
+    replies_made = 0
+
     for comment in sub.stream.comments(skip_existing=True):
         comments_checked += 1
         if compliments_found > 0 and compliments_found % 10 == 0 or comments_checked % 100 == 0:
             print(f"comments checked: {comments_checked}; compliments found: {compliments_found}")
+
         # Avoid the rough side of town
         if comment.subreddit.over18:
             continue
@@ -63,6 +72,7 @@ while True:
             continue
 
         compliment_used = None
+        message = None
 
         # check each comment for any combination of objects, [adverbs], and compliments
         for subject in subjects:
@@ -85,12 +95,22 @@ while True:
                 print(f"posting reply in {comment.subreddit.display_name}")
                 if comment.parent().author.name == self_name:
                     # We're being complimented!
-                    comment.reply(f"Awww, thanks u/{comment.author.name}. =)")
+                    message = f"Awww, thanks u/{comment.author.name}. =)"
                 elif compliment_used == 'great':
                     # r/beetlejuicing incoming
-                    comment.reply(f"Check my username, u/{comment.author.name}. =)")
+                    message = f"Check my username, u/{comment.author.name}. =)"
                 else:
-                    comment.reply(f"*You're* {compliment_used}, u/{comment.author.name}!")
+                    message = f"*You're* {compliment_used}, u/{comment.author.name}!"
+
+                try:
+                    reply_to_comment(comment, message)
+                    replies_made += 1
+                except APIException as e:
+                    # We expect rate limit issues since the account is new and we're processing a lot of comments
+                    # quickly. Ignore those exceptions, but raise any others.
+                    print(f'Encountered API exception: {str(e)}')
+                    if "RATELIMIT" not in str(e):
+                        raise e
 
     # Refresh the stream every fifteen minutes if no new comments are yielded
     print("sleeping...")
