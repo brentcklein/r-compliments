@@ -3,7 +3,7 @@ import time
 from config import Site
 
 site = Site()
-sub = site.subreddit('qicksilvershangout')
+sub = site.subreddit('all')
 self_name = site.user.me().name
 print(f"logged in as {self_name}")
 
@@ -88,7 +88,7 @@ while True:
                     should_reply = True
                 # if no response, respond
                 if should_reply:
-                    print(f"posting reply in {submission.subreddit.name}")
+                    print(f"posting reply in {submission.subreddit.display_name}")
                     if comment.parent().author.name == self_name:
                         # We're being complimented!
                         comment.reply(f"Awww, thanks u/{comment.author.name}. =)")
@@ -98,6 +98,6 @@ while True:
                     else:
                         comment.reply(f"*You're* {compliment_used}, u/{comment.author.name}!")
 
-    # run every thirty seconds TODO: increase the wait time in prod
+    # run every fifteen minutes
     print("sleeping...")
-    time.sleep(30)
+    time.sleep(900)
