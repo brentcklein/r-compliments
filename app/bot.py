@@ -94,5 +94,5 @@ while True:
                     else:
                         comment.reply(f"*You're* {compliment_used}, u/{comment.author.name}!")
 
-    # run every fifteen minutes
-    time.sleep(900)
+    # run every thirty seconds TODO: increase the wait time in prod
+    time.sleep(30)
