@@ -57,7 +57,7 @@ while True:
         submission.comments.replace_more()
         for comment in submission.comments.list():
             if comment.author is None or comment.author.name == self_name:
-                # Don't compliment self, would get caught in a loop
+                # Don't compliment self, would get caught in a loop, as well as being tacky
                 # Skip comments without an author
                 continue
 
@@ -65,29 +65,25 @@ while True:
             should_reply = False
             compliment_used = None
 
-            # check each comment for any combination of objects and compliments
+            # check each comment for any combination of objects, [adverbs], and compliments
             for subject in subjects:
                 for compliment in compliments:
                     if f"{subject} {compliment}" in comment.body.lower():
                         is_compliment = True
                         compliment_used = compliment
                         break
-
-                if compliment_used is None:  # Don't bother checking adverbs if we already have a compliment
                     for adverb in adverbs:
-                        for compliment in compliments:
-                            if f"{subject} {adverb} {compliment}" in comment.body.lower():
-                                is_compliment = True
-                                compliment_used = f"{adverb} {compliment}"
-                                break
+                        if f"{subject} {adverb} {compliment}" in comment.body.lower():
+                            is_compliment = True
+                            compliment_used = f"{adverb} {compliment}"
+                            break
+                    if compliment_used is not None:
+                        break
 
             if is_compliment:
-                # check each matching comment for a response from self
-                if self_name not in \
-                        [reply.author.name for reply in list(comment.replies) if reply.author is not None]:
-                    should_reply = True
+                # check each comment with a compliment for a response from self
                 # if no response, respond
-                if should_reply:
+                if self_name not in [reply.author.name for reply in list(comment.replies) if reply.author is not None]:
                     print(f"posting reply in {submission.subreddit.display_name}")
                     if comment.parent().author.name == self_name:
                         # We're being complimented!
