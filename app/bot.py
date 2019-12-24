@@ -110,7 +110,7 @@ for comment in sub.stream.comments(skip_existing=True):
                 message = f"Awww, thanks u/{comment.author.name}. =)"
             elif compliment_used == 'great':
                 # r/beetlejuicing incoming
-                message = f"Check my username, u/{comment.author.name}. =)"
+                message = f"no u"
             else:
                 message = f"*You're* {compliment_used}, u/{comment.author.name}!"
 
