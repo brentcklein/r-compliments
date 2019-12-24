@@ -9,8 +9,6 @@ self_name = site.user.me().name
 print(f"logged in as {self_name}")
 
 subjects = [
-    "it's",
-    "it is",
     "this's",
     "this is",
     "that's",
@@ -20,7 +18,9 @@ subjects = [
     "they're",
     "they are",
     "he's",
-    "he is"
+    "he is",
+    "she's",
+    "she is"
 ]
 
 adverbs = [
@@ -74,7 +74,7 @@ replies_made = 0
 
 for comment in sub.stream.comments(skip_existing=True):
     comments_checked += 1
-    if compliments_found > 0 and compliments_found % 10 == 0 or comments_checked % 100 == 0:
+    if comments_checked % 100 == 0:
         print(f"comments checked: {comments_checked}; "
               f"compliments found: {compliments_found}; "
               f"replies made {replies_made}")
@@ -118,8 +118,8 @@ for comment in sub.stream.comments(skip_existing=True):
                 reply_to_comment(comment, message)
                 replies_made += 1
             except APIException as e:
-                # We expect rate limit issues since the account is new and we're processing a lot of comments
-                # quickly. Log those exceptions, but also raise any others.
+                # We expect rate limit issues since the account is new and we're processing a lot of comments quickly.
+                # Log those exceptions, but also raise any others.
                 print(f'Encountered API exception: {str(e)}')
                 if "RATELIMIT" not in str(e):
                     raise e
