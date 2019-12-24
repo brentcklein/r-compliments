@@ -1,10 +1,11 @@
 import json
+import os
 
 from config import Site
 from praw.exceptions import APIException
 
 site = Site()
-sub = site.subreddit('all')
+sub = site.subreddit(os.environ['praw_subreddit'])
 self_name = site.user.me().name
 print(f"logged in as {self_name}")
 
@@ -105,7 +106,11 @@ for comment in sub.stream.comments(skip_existing=True):
         if self_name not in [reply.author.name for reply in list(comment.replies) if reply.author is not None]:
             compliments_found += 1
             print(f"posting reply in {comment.subreddit.display_name}")
-            if comment.parent().author.name == self_name:
+
+            # parent might be lazy, so refresh it to get the author
+            parent = comment.parent()
+            parent.refresh()
+            if parent.author.name == self_name:
                 # We're being complimented!
                 message = f"Awww, thanks u/{comment.author.name}. =)"
             elif compliment_used == 'great':
