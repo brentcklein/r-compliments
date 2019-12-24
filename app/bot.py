@@ -42,7 +42,8 @@ compliments = [
     "beautiful",
     "interesting",
     "great",
-    "an inspiration"
+    "an inspiration",
+    "breathtaking"
 ]
 
 with open('subreddits.json') as json_file:
@@ -57,7 +58,7 @@ def reply_to_comment(c, m):
 
 def thread_is_suitable(c):
     return \
-        c.submission.subreddit.display_name not in restricted_subreddits and \
+        c.submission.subreddit.display_name.lower() not in restricted_subreddits and \
         not c.submission.subreddit.over18 and \
         'serious' not in c.submission.title.lower() and \
         c.author is not None and \
