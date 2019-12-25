@@ -10,17 +10,17 @@ self_name = site.user.me().name
 print(f"logged in as {self_name}")
 
 subjects = [
-    "this's",
+    u"this\u2019s",
     "this is",
-    "that's",
+    u"that\u2019s",
     "that is",
-    "you're",
+    u"you\u2019re",
     "you are",
-    "they're",
+    u"they\u2019re",
     "they are",
-    "he's",
+    u"he\u2019s",
     "he is",
-    "she's",
+    u"she\u2019s",
     "she is"
 ]
 
@@ -107,10 +107,7 @@ for comment in sub.stream.comments(skip_existing=True):
             compliments_found += 1
             print(f"posting reply in {comment.subreddit.display_name}")
 
-            # parent might be lazy, so refresh it to get the author
-            parent = comment.parent()
-            parent.refresh()
-            if parent.author.name == self_name:
+            if comment.parent().author is not None and comment.parent().author.name == self_name:
                 # We're being complimented!
                 message = f"Awww, thanks u/{comment.author.name}. =)"
             elif compliment_used == 'great':
